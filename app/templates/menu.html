@@ -1,0 +1,57 @@
+            <div class="menu">
+                <ul class="list">
+                    <li>
+                        <a href="/">
+                            <span>visão geral</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <span>lançamentos</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{url_for('list_transactions')}}">
+                                    <span>Todos os lançamentos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{url_for('list_accounts')}}">
+                                    <span>Contas e carteiras</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{url_for('list_credit_cards')}}">
+                                    <span>Cartões de crédito</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{{url_for('list_categories')}}">
+                            <span>categorias</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <span>relatórios</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{{url_for('generate_report', id = '1')}}">
+                                    <span>receitas x despesas (por categoria)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="{{url_for('logout')}}">
+                            <span>sair</span>
+                        </a>
+                    </li>
+
+            </div>

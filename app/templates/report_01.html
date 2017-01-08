@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/css/footable.core.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="card" id= "categories">
+                		<div class="header">
+                        <strong>Relatório de Receitas x Despesas por categoria</strong>
+                        </br></br>
+                        <form id="form-report" action="{{url_for('generate_report', id = '1')}}" method="POST">
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="start_date">Data inicial</label>
+                        <input type="text" class="form-control" name="start_date" id="start_date" required/>
+                        </div>
+                        </div>
+
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="end_date">Data final</label>
+                        <input type="text" class="form-control" name="end_date" id="end_date" required/>
+                        </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-link waves-effect" id="generateReportBtn">Gerar</button>
+                        </div>
+
+                        </form>
+
+                        </div>
+
+                		<div class="body">
+                		<table class="table" id="table-categories-incomes-expenses" data-sort="false">
+                		<thead>
+                		<th class="text-left">CATEGORIA</th>
+                		<th class="text-right">ENTRADAS</th>
+                		<th class="text-right">SAIDAS</th>
+                		</thead>
+
+                		<tbody>
+                		</tbody>
+                		</table>
+                		</div>
+                	</div>
+
+                </div>
+
+
+
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/moment-with-locales.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/js/footable.all.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script type="text/javascript">
+
+     $('#form-report').bind('submit', function(e) {
+        e.preventDefault();
+        startDate = moment($('#start_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
+        endDate = moment($('#end_date').val(),'DD/MM/YYYY').format('YYYY-MM-DD');
+
+        $('#table-categories-incomes-expenses tbody > tr').remove();
+
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify({ start_date: startDate, end_date: endDate}, null, '\t'),
+            url: '{{url_for('generate_report', id = '1')}}',
+            success: function(response) {
+                jQuery.each(response, function(index, category_totals) {
+                    console.log(category_totals);
+                    jQuery.each(category_totals, function(index, category) {
+                        row  = '<tr>';
+                        row  += '<td>' + category.name + '</td>';
+                        row  += '<td class="text-right col-green">' + parseFloat(category.incomes).toFixed(2).replace('.',',') + '</td>';
+                        row  += '<td class="text-right col-pink">' + parseFloat(category.expenses).toFixed(2).replace('.',',') + '</td>';
+                        row  += '</tr>';
+                        if((parseFloat(category.incomes) - parseFloat(category.expenses)) < 0) {
+                            $('#table-categories-incomes-expenses').append(row);
+                        }
+                    });
+                });
+            }
+
+        });
+
+     });
+
+
+	function padNumber(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+	}
+
+
+    $(document).ready(function() {
+
+    $('#start_date').mask('00/00/0000');
+    $('#end_date').mask('00/00/0000');
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    swal("Oops...", "{{message}}", "error");
+    {%elif category == 'success' %}
+    $.notify("{{message}}", { type:'success' });
+    {%endif%}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    $(document).on({
+        ajaxStart: function() { $('.page-loader-wrapper').fadeIn();    },
+        ajaxStop: function() { $('.page-loader-wrapper').fadeOut(); }
+    });
+
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="card" id="overview">
+               	 		<div class="body bg-cyan">
+                        <p class="text-center"><strong><span id="greeting"></span>, {{current_user.name}}!</strong></p>
+                        <h3><p class="text-center" id="total-accounts-balance"></p></h3>
+                        <p class="text-center"><strong>Saldo geral</strong></p>
+                		</div>
+                	</div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                	<div class="card" id= "accounts_overview">
+                		<div class="header"><strong>Minhas contas</strong></div>
+                		<div class="body">
+                		    <table class="table table-bordered table-condensed" id="accounts-overview-table">
+                		        <thead></thead>
+                		        <tbody></tbody>
+                		    </table>
+                		</div>
+                	</div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <section class="widget" data-widgster-load="{{url_for('widgets_credit_cards_overview')}}">
+                	<div class="card" id="credit_cards_overview">
+                		<div class="header"><strong>Cartões de crédito</strong></div>
+                		<div class="body">
+                		</div>
+                	</div>
+                    </section>
+                </div>
+
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+    var thehours = new Date().getHours();
+    var greetingMessage;
+	var morning = ('Bom dia');
+	var afternoon = ('Boa tarde');
+	var evening = ('Boa noite');
+
+	if (thehours >= 0 && thehours < 12) {
+		greetingMessage = morning;
+
+	} else if (thehours >= 12 && thehours < 17) {
+		greetingMessage = afternoon;
+
+	} else if (thehours >= 17 && thehours < 24) {
+		greetingMessage = evening;
+	}
+
+	$('#greeting').append(greetingMessage);
+
+    var accounts = [{% for account in accounts %}'{{ account.id }}',{% endfor %}];
+
+    total_accounts_balance = 0.00;
+
+    $.ajaxSetup({ cache: false });
+    $.addAccountToAccountsOverview = function(id) {
+      jQuery.ajax({
+        type: "GET",
+        url: '/accounts/' + id + '/balance',
+        type: "GET",
+        async: 'false',
+        success: function(account) {
+          total_accounts_balance += account.balance;
+
+          row = '<tr>';
+          row += '<td><img src=\"/images/account.jpg\" height=\"40\"/> ';
+          row += '<strong><span class="col-cyan">' + account.name;
+          row += '</span></strong></td>';
+          row += '<td><span';
+          if(parseFloat(account.balance) < 0 ) {
+            row += ' class=\"col-pink\" ';
+          }
+          else {
+            row += ' class=\"col-green\" ';
+          }
+          row += 'style="float: right;"><h5>';
+          row += parseFloat(account.balance).toFixed(2).replace('.',',').replace('-','');
+          row += ' </h5></span></td>';
+          row += '<tr>';
+
+          $('#accounts-overview-table tbody').append(row);
+        }
+      });
+    }
+
+    $.each(accounts, function(index, id) {
+      $.addAccountToAccountsOverview(id);
+    });
+
+$(document).on({
+ajaxStart: function() { $('.page-loader-wrapper').fadeIn();    }
+});
+
+$(document).ajaxStop(function(){
+    $('.page-loader-wrapper').fadeOut();
+    $('#total-accounts-balance').text('R$ ' + parseFloat(total_accounts_balance).toFixed(2).replace('.',',').replace('-',''));
+    if(parseFloat(total_accounts_balance) < 0) {
+        $('#total-accounts-balance').addClass('col-pink');
+    } else if (parseFloat(total_accounts_balance) > 0) {
+        $('#total-accounts-balance').addClass('col-green');
+    }
+});
+
+        $('.widget').widgster({
+            autoload: true
+        });
+    });
+    </script>
+</body>
+
+</html>

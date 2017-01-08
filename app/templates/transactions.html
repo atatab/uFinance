@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/css/footable.core.css" rel="stylesheet"/>
+    <link href="/css/bootstrap-editable.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="card" id= "transactions">
+                		<div class="header">
+
+                        <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" id="newTransactionBtn">
+                                    <i class="material-icons">add</i>
+                                </button>
+
+                        <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" id="newTransferBtn">
+                                    <i class="material-icons">compare_arrows</i>
+                                </button>
+                        </br>
+                        </br>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <span id="btn-previous-month"><a href="javascript:void(0)"><i class="material-icons">fast_rewind</i></a></span>
+                        <span id="transactions-month" data-type="select">12</span>
+                        <span id="btn-next-month"><a href="javascript:void(0)"><i class="material-icons">fast_forward</i></a></span>
+                        </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <span id="btn-previous-year"><a href="javascript:void(0)"><i class="material-icons">fast_rewind</i></a></span>
+                        <span id="transactions-year">2016</span>
+                        <span id="btn-next-year"><a href="javascript:void(0)"><i class="material-icons">fast_forward</i></a></span>
+                        </div>
+                        </br>
+                        </div>
+
+                		<div class="body">
+                		<table class="table" id="table-transactions" data-sort="false">
+                		<thead>
+                		<th class="text-left">DATA</th>
+                		<th class="text-left">DESCRIÇÃO</th>
+                		<th data-hide="phone" class="text-left">CATEGORIA</th>
+                		<th data-hide="phone" class="text-left">CONTA</th>
+                		<th class="text-right">VALOR</th>
+                		<th data-hide="phone" class="text-left">AÇÃO</th>
+                        <th data-hide="phone"></th>
+                		</thead>
+
+                		<tbody>
+                		</tbody>
+                		</table>
+                		</div>
+                	</div>
+
+
+                	<div class="card">
+                		<div class="body">
+                		<table class="table" id="table-info" data-sort="false">
+                		<thead>
+                		<th data-hide="phone" class="text-right">Saldo anterior</th>
+                		<th data-hide="phone" class="text-right">Receita prevista</th>
+                		<th data-hide="phone" class="text-right">Despesa prevista</th>
+                		<th class="text-right">Saldo previsto</th>
+                		<th data-hide="phone" class="text-right">Receita realizada</th>
+                		<th data-hide="phone" class="text-right">Despesa realizada</th>
+                		<th class="text-right">Saldo realizado</th>
+                		</thead>
+
+                		<tbody>
+                 		<tr>
+                		<td id="previous-balance"></td>
+                		<td id="expected-incomes" class="col-teal text-right"></td>
+                		<td id="expected-expenses" class="col-pink text-right"></td>
+                		<td id="expected-balance"></td>
+                 		<td id="incomes" class="col-teal text-right"></td>
+                		<td id="expenses" class="col-pink text-right"></td>
+                		<td id="balance"></td>
+                		</tr>
+
+                		</tbody>
+                		</table>
+                		</div>
+                	</div>
+
+                </div>
+
+
+
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/moment-with-locales.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script src="/js/bootstrap-editable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/js/footable.all.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script type="text/javascript">
+
+
+    function editTransaction(id) {
+        swal({
+        title: "",
+        text: "Editar lançamento?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+        },
+        function(){
+        window.location.href = "/transactions/edit/" + id;
+        });
+    }
+
+
+    function deleteTransaction(id) {
+        swal({
+        title: "",
+        text: "Deletar lançamento?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sim",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+        },
+        function(){
+        window.location.href = "/transactions/delete/" + id;
+        });
+    }
+
+
+	function padNumber(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+	}
+
+
+	function listTransactionsFromMonthAndYear(month, year) {
+
+		$('#previous-balance').text('');
+		$('#expected-incomes').text('');
+		$('#expected-expenses').text('');
+		$('#expected-balance').text('');
+		$('#incomes').text('');
+		$('#expenses').text('');
+		$('#balance').text('');
+        $('#previous-balance').removeClass();
+        $('#expected-balance').removeClass();
+        $('#balance').removeClass();
+
+		var previousBalance = 0;
+		var expectedIncomes = 0;
+		var expectedExpenses = 0;
+		var expectedBalance = 0;
+		var incomes = 0;
+		var expenses = 0;
+		var balance = 0;
+
+		$.ajaxSetup({cache: false});
+		jQuery.ajaxSetup({async:false});
+
+		startDate = year + '-' + month + '-' + '01';
+		endDate   = year + '-' + month + '-' + moment(year + '-' + month, "YYYY-MM").daysInMonth();
+
+
+		$.ajax({
+			type: "GET",
+
+			url: '/transactions/' + startDate + '/' + endDate + '/json',
+			success: function(response) {
+                if(month == '01') {
+                    month = '13';
+                    year = year - 1;
+                }
+
+                previous_balance_date = year + '-' + padNumber((month-1),2) + '-' +
+                moment(year + '-' + (month - 1), "YYYY-MM").daysInMonth();
+
+				$.ajax({
+					type: "GET",
+					url: '/accounts/total_balance_until_date/' + previous_balance_date,
+					success: function(result) {
+						previousBalance = result;
+					}
+				});
+
+				$('#table-transactions tbody > tr').remove();
+				jQuery.each(response, function(index, transactions) {
+					jQuery.each(transactions, function(index, transaction) {
+						row  = '<tr>';
+						row += '<td>' + moment(transaction.transaction_date).format('DD/MM/YY'); + '</td>';
+						if(new Date(transaction.transaction_date) < new Date() && transaction.is_done == 'N') {
+							row += '<td class="col-pink">' + transaction.description + '</td>';
+						}
+						else{
+							row += '<td>' + transaction.description + '</td>';
+						}
+						row += '<td>' + transaction.category_name + '</td>';
+						row += '<td>' + transaction.account_name + '</td>';
+						row += '<td class=\"text-right ';
+                        if(transaction.type == 'DEB' ) {
+                            row += " col-pink ";
+                        }
+                        else {
+                            row+= " col-teal ";
+                        }
+                        row += "\">";
+                        row += parseFloat(transaction.amount).toFixed(2).replace('.',',') + '</td>';
+						row += '<td><a href="javascript:editTransaction(' + transaction.id + ');"><i class="material-icons">mode_edit</i></a>';
+                        row += '<a href="javascript:deleteTransaction(' + transaction.id + ');"><i class="material-icons">delete</i></a>';
+                        row += '</td>';
+
+						row += '<td>';
+
+                        if(transaction.category_name == 'Transferência') {
+                            row += '<i class=\"material-icons\">compare_arrows</i>';
+                        }
+                        else {
+						    if(transaction.account_type == '2') {
+							    row += '<i class=\"material-icons\">credit_card</i>';
+						    }
+						    else {
+							 row += '<i class=\"material-icons\">attach_money</i>';
+						    }
+                        }
+
+
+                        if(transaction.type == 'CRE' && transaction.account_type == '1' && transaction.category_name != 'Transferência') {
+                            expectedIncomes += parseFloat(transaction.amount);
+                        }
+                        else if (transaction.type == 'DEB' && transaction.account_type == '1' && transaction.category_name != 'Transferência') {
+                            expectedExpenses += parseFloat(transaction.amount);
+                        }
+
+                        if(transaction.is_done == 'S') {
+                            row += '<i class=\"material-icons col-teal\">done</i>';
+                            if(transaction.type == 'CRE' && transaction.account_type == '1' && transaction.category_name != 'Transferência') {
+                                incomes += parseFloat(transaction.amount);
+                            }
+                            else if (transaction.type == 'DEB' && transaction.account_type == '1' && transaction.category_name != 'Transferência') {
+                                expenses += parseFloat(transaction.amount);
+                            }
+                        }
+                        else if(transaction.is_done == 'N') {
+                            row += '<i class=\"material-icons\">done</i>';
+                        }
+
+
+
+
+						if(transaction.attachment_filename != null) {
+							row += '<a href=\"/uploads/transactions_attachments/' + transaction.attachment_filename + '\" target=\"_blank\"><i class=\"material-icons\">attach_file</i></a>';
+						}
+
+
+						row += '</td>';
+
+
+
+						row += '</tr>';
+
+						expectedBalance = parseFloat(previousBalance) + parseFloat(expectedIncomes) - parseFloat(expectedExpenses)
+						balance = parseFloat(previousBalance) + parseFloat(incomes) - parseFloat(expenses);
+
+						$('#previous-balance').text(parseFloat(previousBalance).toFixed(2).replace('.',','));
+						$('#expected-incomes').text(parseFloat(expectedIncomes).toFixed(2).replace('.',','));
+						$('#expected-expenses').text(parseFloat(expectedExpenses).toFixed(2).replace('.',','));
+						$('#expected-balance').text(parseFloat(expectedBalance).toFixed(2).replace('.',','));
+						$('#incomes').text(parseFloat(incomes).toFixed(2).replace('.',','));
+						$('#expenses').text(parseFloat(expenses).toFixed(2).replace('.',','));
+						$('#balance').text(parseFloat(balance).toFixed(2).replace('.',','));
+
+                        if(parseFloat(previousBalance) < 0 ) {
+                            $('#previous-balance').addClass('col-pink');
+                        }
+                        else if (parseFloat(previousBalance) > 0) {
+                            $('#previous-balance').addClass('col-teal');
+                        }
+
+
+                        if(parseFloat(expectedBalance) < 0 ) {
+                            $('#expected-balance').removeClass().addClass('col-pink');
+                        }
+                        else if (parseFloat(expectedBalance) > 0) {
+                            $('#expected-balance').removeClass().addClass('col-teal');
+                        }
+
+                        if(parseFloat(balance) < 0 ) {
+                            $('#balance').removeClass().addClass('col-pink');
+                        }
+                        else if (parseFloat(balance) > 0) {
+                            $('#balance').removeClass().addClass('col-teal');
+                        }
+
+
+                        $('#previous-balance').addClass('text-right');
+                        $('#expected-balance').addClass('text-right');
+                        $('#balance').addClass('text-right');
+
+
+						$('#table-transactions').append(row);
+                        $('#table-transactions').trigger('footable_redraw');
+                        $('#table-info').trigger('footable_redraw');
+
+					});
+				});
+			}
+
+		});
+	}
+
+    $(document).ready(function() {
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    swal("Oops...", "{{message}}", "error");
+    {%elif category == 'success' %}
+    $.notify("{{message}}", { type:'success' });
+    {%endif%}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+
+
+    $('#newTransactionBtn').click(function() {
+    window.location.href = '{{url_for('new_transaction')}}';
+    });
+
+    $('#newTransferBtn').click(function() {
+    window.location.href = '{{url_for('new_transfer')}}';
+    });
+
+        $('#table-transactions').footable({ paginate:false });
+        $('#table-info').footable({ paginate:false });
+
+    	var today = new Date()
+    	var currentDay = padNumber(today.getDate(),2);
+    	var currentMonth = padNumber(today.getMonth() + 1, 2);
+    	var currentYear = padNumber(today.getFullYear(),4);
+
+    	if (sessionStorage.getItem("transactionsFromMonth") === null) {
+    		$('#transactions-month').text(currentMonth);
+    		sessionStorage.setItem('transactionsFromMonth', $('#transactions-month').text());
+    	}
+    	else {
+    		$('#transactions-month').text(sessionStorage.getItem("transactionsFromMonth"));
+    	}
+
+    	if (sessionStorage.getItem("transactionsFromYear") === null) {
+    		$('#transactions-year').text(currentYear);
+    		sessionStorage.setItem('transactionsFromYear', $('#transactions-year').text());
+    	}
+    	else {
+    		$('#transactions-year').text(sessionStorage.getItem("transactionsFromYear"));
+    	}
+
+
+    	listTransactionsFromMonthAndYear($('#transactions-month').text(),$('#transactions-year').text());
+
+    $('#transactions-year').editable({
+        type: 'text',
+        value: '',
+        success: function(response, newValue) {
+            if(!(newValue > 1500) || (isNaN(newValue))) {
+                location.reload();
+            }
+            else {
+                sessionStorage.setItem("transactionsFromYear", newValue);
+                location.reload();
+            }
+        }
+    });
+
+
+    $('#transactions-month').editable({
+        source: [
+        {value: '01', text: '01'},
+        {value: '02', text: '02'},
+        {value: '03', text: '03'},
+        {value: '04', text: '04'},
+        {value: '05', text: '05'},
+        {value: '06', text: '06'},
+        {value: '07', text: '07'},
+        {value: '08', text: '08'},
+        {value: '09', text: '09'},
+        {value: '10', text: '10'},
+        {value: '11', text: '11'},
+        {value: '12', text: '12'}
+        ],
+        success: function(response, newValue) {
+            sessionStorage.setItem("transactionsFromMonth", newValue);
+            location.reload();
+        }
+    });
+
+    	$('#btn-previous-month').click(function() {
+    		if(parseInt($('#transactions-month').text()) >= 2) {
+    			newTransactionsMonth = parseInt($('#transactions-month').text()) - 1;
+    			$('#transactions-month').text(padNumber(newTransactionsMonth,'2'));
+    			 listTransactionsFromMonthAndYear($('#transactions-month').text(),$('#transactions-year').text());
+    			 sessionStorage.setItem('transactionsFromMonth', $('#transactions-month').text());
+    			 sessionStorage.setItem('transactionsFromYear', $('#transactions-year').text());
+    		}
+    	});
+
+    	$('#btn-next-month').click(function(){
+    		if(parseInt($('#transactions-month').text()) <= 11) {
+    			newTransactionsMonth = parseInt($('#transactions-month').text()) + 1;
+    			$('#transactions-month').text(padNumber(newTransactionsMonth,'2'));
+    			listTransactionsFromMonthAndYear($('#transactions-month').text(),$('#transactions-year').text());
+    			sessionStorage.setItem('transactionsFromMonth', $('#transactions-month').text());
+    			sessionStorage.setItem('transactionsFromYear', $('#transactions-year').text());
+    		}
+    	});
+
+    	$('#btn-previous-year').click(function() {
+    		newTransactionsYear = parseInt($('#transactions-year').text()) - 1;
+    		$('#transactions-year').text(newTransactionsYear);
+    		listTransactionsFromMonthAndYear($('#transactions-month').text(),$('#transactions-year').text());
+    		sessionStorage.setItem('transactionsFromMonth', $('#transactions-month').text());
+    		sessionStorage.setItem('transactionsFromYear', $('#transactions-year').text());
+    	});
+
+    	$('#btn-next-year').click(function() {
+    		newTransactionsYear = parseInt($('#transactions-year').text()) + 1;
+    		$('#transactions-year').text(newTransactionsYear);
+    		listTransactionsFromMonthAndYear($('#transactions-month').text(),$('#transactions-year').text());
+    		sessionStorage.setItem('transactionsFromMonth', $('#transactions-month').text());
+    		sessionStorage.setItem('transactionsFromYear', $('#transactions-year').text());
+    	});
+
+
+    $(document).on({
+        ajaxStart: function() { $('.page-loader-wrapper').fadeIn();    },
+        ajaxStop: function() { $('.page-loader-wrapper').fadeOut(); }
+    });
+
+    });
+    </script>
+</body>
+
+</html>

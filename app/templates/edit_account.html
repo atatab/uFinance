@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">       
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                	<div class="card">
+                		<div class="header">
+                        <strong>Editar conta</strong>
+                        </div>
+                		<div class="body">
+
+                        <form id="edit-account" method="POST" action="{{url_for('edit_account', id=account.id)}}">
+                        
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="name">Nome</label>
+                        <input type="text" class="form-control" name="name" id="name" value="{{account.name}}" required/>
+                        </div>
+                        </div> 
+
+                        <div class="form-group">
+                        <input type="checkbox" class="form-control" name="is_active" id="is_active" {{"checked" if account.is_active == 'N'}} /><label for="is_active">Conta inativa?</label>
+                        </div>                        
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-link waves-effect">Salvar</button>
+                            <a href="{{url_for('list_accounts')}}"><button type="button" class="btn btn-link waves-effect">Cancelar</button></a>
+                        </div>
+
+                        </form>
+
+                		</div>
+                	</div>
+                </div>
+
+            </div>
+            </div>
+        </div>
+    </section>
+  
+    </div> 
+   
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

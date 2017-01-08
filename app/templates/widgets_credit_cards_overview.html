@@ -1,0 +1,15 @@
+<ul class="list-unstyled">
+
+{% for credit_card in credit_cards %}
+
+<li>
+<span><img src="/images/credit_card.jpg" height="40"/></span>
+<span class="col-cyan"><strong>{{credit_card.name}}</strong></span>
+<p class="text-left" style="margin-left: 45px;"><strong>Limite disponível:</strong> R$ {{('%0.2f' % credit_card.limit_left | float).replace('.',',')}} <span>de  R$ {{('%0.2f' % credit_card.limit | float).replace('.',',')}}</span></p>
+<a href="{{url_for('list_credit_card_invoices', id = credit_card.id)}}"><span style="margin-left: 45px;" class="btn">ver faturas</span></a>
+</li>
+<li>
+
+{% endfor %}
+
+</ul>

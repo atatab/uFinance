@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/css/footable.core.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                	<div class="card">
+                		<div class="header">
+                        <strong>Novo lançamento no Cartão de Crédito {{credit_card.name}}</strong>
+                        </div>
+
+                		<div class="body">
+                        <form id="new-transaction" method="POST" action="{{url_for('new_credit_card_transaction', id = credit_card.id)}}" enctype="multipart/form-data">
+
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="transaction_date">Data</label>
+                        <input type="text" class="form-control" name="transaction_date" id="transaction_date" required/>
+                        </div>
+                        </div> 
+
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="invoice_date">Data da fatura</label>
+                        <input type="text" class="form-control" name="invoice_date" id="invoice_date" required/>
+                        </div>
+                        </div> 
+
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="name">Descrição</label>
+                        <input type="text" class="form-control" name="description" id="description" required/>
+                        </div>
+                        </div> 
+
+                        <div class="form-group">
+                        <div class="form-line">
+                        <label for="amount">Valor</label>
+                        <input type="text" class="form-control" name="amount" id="amount" required/>
+                        </div>
+                        </div> 
+
+                        <div class="form-group">
+                        <label>Tipo</label>
+                        <select class="form-control" id="type" name="type">
+                        <option value="DEB">DESPESA</option>
+                        <option value="CRE">RECEITA</option>
+                        </select>
+                        </div>  
+
+                        <div class="form-group">
+                        <input type="checkbox" class="form-control" name="is_done" id="is_done" checked/><label for="is_done">Consolidado?</label>
+                        </div>     
+
+                        <div class="form-group">
+                        <input type="checkbox" class="form-control" name="payment_done" id="payment_done"/><label for="payment_done">Pago?</label>
+                        </div>                          
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-link waves-effect">Adicionar</button>
+                            <a href="{{url_for('list_credit_card_invoices', id = credit_card.id)}}"><button type="button" class="btn btn-link waves-effect">Cancelar</button></a>
+                        </div>
+
+                        </form>
+                		</div>
+                	</div>
+
+                </div>
+
+
+
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/moment-with-locales.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/2.0.3/js/footable.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.8/jquery.mask.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('#amount').mask("###0,00", {reverse: true});
+        $('#transaction_date').val(moment().format('DD/MM/YYYY'));
+        $('#invoice_date').val(moment(sessionStorage.getItem("CreditCardtransactionsFromYear") + sessionStorage.getItem("CreditCardtransactionsFromMonth")
+ + '01').format('DD/MM/YYYY'));
+        $('#transaction_date').mask('00/00/0000');
+        $('#invoice_date').mask('00/00/0000');
+    });  
+    </script>
+</body>
+
+</html>

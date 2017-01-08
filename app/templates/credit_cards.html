@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="/css/waves.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/css/themes/all-themes.css" rel="stylesheet" />
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Aguarde...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    {%include 'top_bar.html' %}
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            {%include 'user_info.html' %}
+            <!-- #User Info -->
+            <!-- Menu -->
+            {% include 'menu.html' %}
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row clearfix">       
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="card">
+                		<div class="header">
+                        <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" id="newCreditCardBtn">
+                                    <i class="material-icons">add</i>
+                                </button>
+                        </br></br>
+                        <strong>Cartões de crédito</strong>
+                        </div>
+                		<div class="body">
+                        <ul class="credit-cards-list">
+                        {% for credit_card in credit_cards %}
+                        <li class="credit-card-item">{{credit_card.name}} - Limite: {{('%0.2f' % credit_card.credit_card_limit | float).replace('.',',')}} {% if credit_card.is_active =='N' %} {{"(DESATIVADO)"}} {% endif %}
+                        <p class="options">
+                        <span class="font-bold"><a href="{{url_for('edit_credit_card', id = credit_card.id)}}">editar</a></span>
+                        <span class="col-red font-bold"><a href="javascript:deleteAccount({{credit_card.id}});">excluir</a></span>
+                        </p>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                		</div>
+                	</div>
+                </div>
+
+            </div>
+            </div>
+        </div>
+    </section>
+  
+    </div> 
+   
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/waves.min.js"></script>
+    <script src="/js/widgster.js"></script>
+    <script src="/js/sweetalert.min.js"></script>
+    <script src="/js/bootstrap-notify.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script type="text/javascript">
+
+    function deleteAccount(id) {
+        swal({
+        title: "Você tem certeza?",
+        text: "Deletar o cartão de crédito?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Sim, deletar!",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+        },
+        function(){
+        window.location.href = "/credit_cards/delete/" + id;
+        });
+    }
+
+    $(document).ready(function() {
+        $('#newCreditCardBtn').click(function() {
+            window.location.href = '{{url_for('new_credit_card')}}';
+        });
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    {% if category == 'error' %}
+    swal("Oops...", "{{message}}", "error");
+    {%elif category == 'success' %}
+    $.notify("{{message}}", { type:'success' });
+    {%endif%}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    });
+    </script>
+
+</body>
+
+</html>
